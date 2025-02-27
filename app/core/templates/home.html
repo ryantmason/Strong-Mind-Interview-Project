@@ -1,14 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-    <div>
-        <p>
-            HELOOOO
-        </p>
-    </div>
-</body>
-</html>
+{% extends '_base.html' %}
+
+{% block title %}Home - StrongMind Pizza Shop{% endblock %}
+
+{% block content %}
+  <h2>About Us</h2>
+  <p>Welcome to StrongMind Pizza Shop! We offer delicious pizzas and excellent customer service.</p>
+  <h2>Our Services</h2>
+  <ul>
+      <li>Delivery</li>
+      <li>Online Ordering</li>
+      <li>Special Deals</li>
+  </ul>
+{% endblock %}

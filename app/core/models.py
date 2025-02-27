@@ -4,6 +4,11 @@ from django.contrib.postgres.fields import ArrayField
 from django.db import models
 
 
+# class PizzaSizes(Enum):
+    # SMALL = 'small'
+    # MEDIUM = 'medium'
+    #
+
 class AvailableToppings(models.Model):
     topping_name = models.CharField(max_length=255, default="", null=True)
 
