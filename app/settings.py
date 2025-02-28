@@ -29,6 +29,11 @@ else:
 
 ALLOWED_HOSTS = ['localhost', 'sm-pizza-shop.site', 'king-prawn-app-dwe7v.ondigitalocean.app']
 
+if os.getenv("DEPLOYENVIRONMENT") == "PROD":
+    CSRF_TRUSTED_ORIGINS = [
+        'king-prawn-app-dwe7v.ondigitalocean.app',
+        'sm-pizza-shop.site'
+    ]
 
 
 # Application definition
