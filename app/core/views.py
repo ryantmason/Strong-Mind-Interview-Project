@@ -1,16 +1,20 @@
-import uuid
 import json
+
+# Django core imports
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_protect, csrf_exempt
-from django.views.generic import TemplateView
-from django.utils.decorators import method_decorator
-from django.shortcuts import render, redirect
-from .forms import SignUpForm
 from django.contrib.auth.views import LoginView
 from django.db.models import Count
+from django.http import JsonResponse
+from django.shortcuts import render, redirect
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_protect
+from django.views.generic import TemplateView
+
+# Local app imports
+from .forms import SignUpForm
 from .models import AvailableToppings, PizzaMasterPieces
 from .decorators import group_required
+
 
 
 class HomePageView(LoginRequiredMixin, TemplateView):
@@ -52,6 +56,10 @@ def sign_up(request):
 
     return render(request, 'registration/signup.html', {'form': form})
 
+
+# --------------------
+# Toppings Related Methods
+# --------------------
 
 @group_required(['Pizza Store Owner'])
 def add_new_topping(request):
@@ -170,6 +178,9 @@ def get_unavailable_toppings(request):
     return JsonResponse({'success': True, 'toppings': toppings_list})
 
 
+# --------------------
+# Pizza Related Methods
+# --------------------
 @group_required(['Pizza Store Owner', 'Pizza Chef'])
 def get_all_pizzas(request):
     """

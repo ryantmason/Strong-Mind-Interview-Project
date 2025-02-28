@@ -15,7 +15,11 @@ services:
     build: .
     environment:
       - PYTHONUNBUFFERED=1
-    command: ["python", "-u", "manage.py", "runserver", "0.0.0.0:8000"]
+    command: bash -c "python manage.py migrate && \
+      python manage.py shell -c \"from django.contrib.auth.models import Group; \
+      Group.objects.get_or_create(name='Pizza Store Owner'); \
+      Group.objects.get_or_create(name='Pizza Chef')\" && \
+      python manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/app
     ports:
