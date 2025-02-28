@@ -1,14 +1,245 @@
 {% extends '_base.html' %}
 
 {% block title %}Home - StrongMind Pizza Shop{% endblock %}
-
 {% block content %}
-  <h2>About Us</h2>
-  <p>Welcome to StrongMind Pizza Shop! We offer delicious pizzas and excellent customer service.</p>
-  <h2>Our Services</h2>
-  <ul>
-      <li>Delivery</li>
-      <li>Online Ordering</li>
-      <li>Special Deals</li>
-  </ul>
+    <style>
+        /* Modal Styles */
+        .modal {
+            border-radius: 10px;
+            background-color: rgba(0, 0, 0, 0.4);
+            display: none;
+            height: 100%;
+            left: 0;
+            overflow: auto;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            border: 1px solid #888;
+            margin: 15% auto;
+            padding: 20px;
+            width: 600px;
+        }
+
+
+        #pizza-menu {
+            text-align: left;
+        }
+
+        /* Pizza Display Grid Styles */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* 3 equal-width columns */
+            gap: 10px; /* Space between items */
+            max-width: 600px;
+            margin: 0 auto; /* Center the grid */
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+        }
+
+        .grid-item {
+            padding: 20px;
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            border-radius: 8px;
+        }
+
+        #add-item-btn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #008CBA;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        #add-item-btn:hover {
+            background-color: #006f8a;
+        }
+
+        /* Available Toppings Styles */
+        .container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .list-container {
+            width: 150px;
+            height: 200px;
+            border: 1px solid #ccc;
+            margin: 0 20px;
+            padding: 10px;
+            overflow-y: auto;
+        }
+
+        .list-item {
+            padding: 5px;
+            margin: 5px 0;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+        }
+
+        .arrow-btn {
+            cursor: pointer;
+            padding: 10px;
+            font-size: 20px;
+            background-color: #008CBA;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            margin: 0 10px;
+        }
+
+        .arrow-btn:hover {
+            background-color: #006f8a;
+        }
+
+        /* Delete button inside items */
+        .remove-btn {
+            background-color: red;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 5px;
+            cursor: pointer;
+            float: right;
+        }
+
+        .remove-btn:hover {
+            background-color: darkred;
+        }
+
+
+    </style>
+    <h2>About Us</h2>
+    <p>Welcome to StrongMind Pizza Shop! We offer delicious pizzas and excellent customer service.</p>
+    <h2>Our Services</h2>
+    <div id="pizza-menu">
+        Pizza Masterpieces
+        <div class="grid-container" id="grid-container">
+            {% for pizza in pizza_list %}
+                <div id="{{ forloop.counter }}" class="grid-item">
+                    {{ pizza.pizza_name }}
+                    <button class="remove-btn">X</button>
+                </div>
+            {% endfor %}
+            <div id="add-item-modal" class="modal">
+                <div class="modal-content">
+                    <span class="close-btn">&times;</span>
+                    <h2>Add New Item</h2>
+                    <input type="text" id="modal-item-name" placeholder="Enter item name">
+                    <button id="modal-submit-btn">Submit</button>
+                </div>
+            </div>
+        </div>
+        <button id="add-item-btn">Add Item</button>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            let selectedItem = null;
+            {#// Handle push app command#}
+            {#$('#').on('submit', function (event) {#}
+            {#    event.preventDefault();#}
+            {##}
+            {#    $('#push-app-loading-anim').show();#}
+            {#    $('#push-app-btn').hide();#}
+            {##}
+            {#    let form = $(this);#}
+            {#    let formData = form.serialize();#}
+            {##}
+            {#    $.ajax({#}
+            {#        type: 'POST',#}
+            {#        url: form.attr('action'),#}
+            {#        data: formData,#}
+            {#        success: function (response) {#}
+            {#            $('#push-app-modal').hide()#}
+            {#            $('#push-app-loading-anim').hide()#}
+            {#            $('#push-app-btn').show()#}
+            {##}
+            {##}
+            {#        },#}
+            {#        error: function (xhr, status, error) {#}
+            {#            console.error("Error: " + error);#}
+            {#            alert('An error occurred while processing the request. Please contact an Admin');#}
+            {#        }#}
+            {#    });#}
+            {# });#}
+
+
+            $(".view-button-container button").click(function () {
+                $(".view-button-container button").removeClass("active");
+                $("#toppings-control, #pizza-menu").removeClass("active");
+
+                $(this).addClass("active");
+
+                if ($(this).attr("id") === "show-pizza-menu-btn") {
+                    $("#pizza-menu").addClass("active");
+                } else if ($(this).attr("id") === "show-available-toppings-btn") {
+                    $("#toppings-control").addClass("active");
+                }
+            });
+
+            // Open modal when "Add Item" button is clicked
+            $('#add-item-btn').click(function () {
+                toggleModal('add-item-modal', 'open');  // Open the modal
+            });
+
+            // Handle modal form submission
+            $('#modal-submit-btn').click(function () {
+                // Get the necessary information from the modal (e.g., item name)
+                const itemName = $('#modal-item-name').val();  // Example: Retrieve value from an input field inside the modal
+
+                if (itemName) {
+                    const newItem = $('<div>', {
+                        class: 'grid-item',
+                        text: itemName || `Item`  // Use the provided item name or default to "Item #"
+                    });
+
+                    // Create and append the remove button inside the new item
+                    const removeButton = $('<button>', {
+                        class: 'remove-btn',
+                        text: 'X'
+                    }).click(function () {
+                        newItem.remove();  // Remove the respective item when the button is clicked
+                    });
+
+                    newItem.append(removeButton);  // Append the remove button to the new item
+
+                    $('#grid-container').append(newItem);  // Add the new item to the grid
+
+                    toggleModal('add-item-modal', 'close');  // Close the modal after submission
+                }
+
+                $('#modal-item-name').val('');
+            });
+
+            // Delegated event binding so it will also listen for clicks on newly added divs/remove btns
+            $(document).on('click', '.remove-btn', function () {
+                $(this).parent().remove();  // Remove the parent grid item of the clicked button
+            });
+            
+            {#function toggleModal(modalId, action) {#}
+            {#    const modal = document.getElementById(modalId);#}
+            {#    if (action === 'open') {#}
+            {#        modal.style.display = 'block';#}
+            {#        document.body.style.overflow = "hidden";#}
+            {#        modal.dispatchEvent(new Event("show"));#}
+            {#    } else if (action === 'close') {#}
+            {#        modal.style.display = 'none';#}
+            {#        document.body.style.overflow = "auto";#}
+            {#        modal.dispatchEvent(new Event("close"));#}
+            {#    }#}
+            {# }#}
+        });
+    </script>
 {% endblock %}

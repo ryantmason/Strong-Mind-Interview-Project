@@ -4,7 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token }}">
     <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
+    <script src="{% static 'js/util.js' %}"></script>
     <title>{% block title %}StrongMind - Pizza Home Page{% endblock %}</title>
     <style>
         body {
@@ -112,6 +114,11 @@
 
 <div class="container">
     <div class="content">
+        <a href="{% url 'home' %}" class="btn btn-primary">Go to Menu</a>
+        <!-- Only the Pizza Store Owner can access this information -->
+        {% if 'Pizza Store Owner' in user.groups.all|stringformat:"s" %}
+            <a href="{% url 'available_toppings' %}" class="btn btn-primary">Available Toppings</a>
+        {% endif %}
         {% block content %}
             <!-- Page-specific content goes here -->
         {% endblock %}

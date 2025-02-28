@@ -1,0 +1,447 @@
+{% extends '_base.html' %}
+
+{% block title %}Home - StrongMind Pizza Shop{% endblock %}
+{% block content %}
+    <style>
+        /* Modal Styles */
+        .modal {
+            border-radius: 10px;
+            background-color: rgba(0, 0, 0, 0.4);
+            display: none;
+            height: 100%;
+            left: 0;
+            overflow: auto;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            border: 1px solid #888;
+            margin: 15% auto;
+            padding: 20px;
+            width: 600px;
+        }
+
+        .modal-title {
+            font-size: 24px;
+            margin: 0 auto;
+        }
+
+        /* Available Toppings Styles */
+        .container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .list-container {
+            width: 150px;
+            height: 200px;
+            border: 1px solid #ccc;
+            margin: 0 20px;
+            padding: 10px;
+            overflow-y: auto;
+        }
+
+        .list-item {
+            padding: 5px;
+            margin: 5px 0;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+        }
+
+        .arrow-btn {
+            cursor: pointer;
+            padding: 10px;
+            font-size: 20px;
+            background-color: #008CBA;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            margin: 0 10px;
+        }
+
+        .arrow-btn:hover {
+            background-color: #006f8a;
+        }
+
+        /* Delete button inside items */
+        .remove-btn {
+            background-color: red;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 5px;
+            cursor: pointer;
+            float: right;
+        }
+
+        .remove-btn:hover {
+            background-color: darkred;
+        }
+
+        /* Style for the selected list item */
+        .selected {
+            background-color: #f0f0f0; /* Light gray background */
+            border: 2px solid #008CBA; /* Blue border */
+            color: #008CBA; /* Blue text color */
+        }
+
+        #view {
+            display: flex;
+            justify-content: center; /* Optional: Center aligns the content horizontally */
+            align-items: flex-start; /* Aligns items at the top */
+        }
+
+        #toppings-control {
+            display: flex;
+            flex-direction: column; /* Stacks items vertically */
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-around; /* Adjust spacing between items */
+        }
+
+        .list-container {
+            flex: 1; /* Each container takes equal space */
+            margin: 0 10px; /* Optional margin for spacing */
+        }
+
+        .list-item {
+            margin-bottom: 5px; /* Optional spacing between items */
+        }
+
+        h5 {
+            text-align: center; /* Centers the title */
+        }
+
+        .input-group, .checkbox-group {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .input-label, .checkbox-label {
+            display: block;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .input-field {
+            padding: 8px;
+            font-size: 16px;
+            width: 80%;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .checkbox-field {
+            margin-top: 10px;
+        }
+
+        /* Modal Footer */
+        .modal-footer {
+            margin-top: 20px;
+        }
+
+        /* Close Button */
+        .close-btn {
+            padding: 10px 20px;
+            background-color: #888;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .close-btn:hover {
+            background-color: #555;
+        }
+
+        .form {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
+            margin: auto;
+        }
+
+
+    </style>
+    <h2>About Us</h2>
+    <p>Welcome to StrongMind Pizza Shop! We offer delicious pizzas and excellent customer service.</p>
+    <h2>Our Services</h2>
+    <div id="view">
+        <div id="toppings-control">
+            <div class="container">
+                <!-- Available Toppings List -->
+                <div class="list-container" id="enabled-list">
+                    <h5>Enabled Toppings</h5>
+                    {% for topping in available_toppings %}
+                        {% if topping.available %}
+                            <div class="list-item"
+                                 data-topping-name="{{ topping.topping_name }}">
+                                {{ topping.topping_name }}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+
+                <!-- Arrows -->
+                <div>
+                    <button class="arrow-btn" id="move-right">→</button>
+                    <br>
+                    <button class="arrow-btn" id="move-left">←</button>
+                </div>
+
+
+                <!-- Unavailable Toppings List -->
+                <div class="list-container" id="disabled-list">
+                    <h5>Disabled Toppings</h5>
+                    {% for topping in available_toppings %}
+                        {% if not topping.available %}
+                            <div class="list-item"
+                                 data-topping-name="{{ topping.topping_name }}">
+                                {{ topping.topping_name }}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div id="add-item-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-btn"
+                      onclick="toggleModal('add-item-modal', 'close')">&times;</span>
+                <h2 class="modal-title">Add New Topping</h2>
+                <form class="form" action="{% url 'add_new_topping' %}" id="add-new-topping-form">
+                    <div class="input-group">
+                        <label for="new-topping-name" class="input-label">Topping Name</label>
+                        <input type="text" id="new-topping-name" name="new-topping-name" class="input-field" required>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <label for="available-checkbox" class="checkbox-label">In Stock?</label>
+                        <input type="checkbox" id="available-checkbox" name="available-checkbox" class="checkbox-field">
+                    </div>
+
+                    <div class="modal-footer">
+                        <button class="close-btn" onclick="toggleModal('add-item-modal')">Add Topping</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <button type="button" id="remove-topping-btn">Delete Selected Topping</button>
+        <button type="button" id="add-topping-btn">Add New Topping</button>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            let selectedItem = null;
+
+            // Function to get the CSRF token from the cookie
+            function getCSRFToken() {
+                const name = 'csrftoken';
+                const cookies = document.cookie.split(';');
+                for (let cookie of cookies) {
+                    cookie = cookie.trim();
+                    if (cookie.startsWith(name + '=')) {
+                        return cookie.substring(name.length + 1);
+                    }
+                }
+                return null;
+            }
+
+            // Handle moving selected item to the disabled list
+            $('#move-right').click(function () {
+                if (selectedItem && selectedItem.parent().attr('id') === 'enabled-list') {
+                    const toppingId = selectedItem.data('topping-name');
+                    console.log("SELECTED ITEM: ", toppingId);
+
+                    console.log("POST data:", {
+                        'topping_name': toppingId,
+                        'available': true,
+                        'csrfmiddlewaretoken': getCSRFToken()
+                    });
+
+
+                    // Update availability in the database
+                    $.ajax({
+                        url: '/update_topping_status/',
+                        type: 'POST',
+                        data: {
+                            'topping_name': toppingId,
+                            'available': false,
+                        },
+                        headers: {
+                            'X-CSRFToken': getCSRFToken(),
+                        },
+                        success: function (response) {
+                            if (response.success) {
+                                $('#disabled-list').append(selectedItem);
+                                selectedItem.removeClass('selected');
+                                selectedItem = null;
+                            } else {
+                                alert("Error Message: " + response.error);
+                            }
+                        },
+                        error: function () {
+                            alert('Error updating topping availability.');
+                        }
+                    });
+                }
+            });
+
+            // Handle moving selected item to the enabled list
+            $('#move-left').click(function () {
+                if (selectedItem && selectedItem.parent().attr('id') === 'disabled-list') {
+                    const toppingId = selectedItem.data('topping-name');
+                    console.log("SELECTED ITEM: ", toppingId);
+
+                    // Update availability in the database
+                    $.ajax({
+                        url: '/update_topping_status/',
+                        type: 'POST',
+                        data: {
+                            'topping_name': toppingId,
+                            'available': true,
+                        },
+                        headers: {
+                            'X-CSRFToken': getCSRFToken(),
+                        },
+                        success: function (response) {
+                            if (response.success) {
+                                $('#enabled-list').append(selectedItem);
+                                selectedItem.removeClass('selected');
+                                selectedItem = null;
+                            } else {
+                                alert("Error Message: " + response.error);
+                            }
+                        },
+                        error: function () {
+                            alert('Error updating topping availability.');
+                        }
+                    });
+                }
+            });
+
+            // Handle item click to select/deselect the item
+            $(document).on('click', '#enabled-list .list-item, #disabled-list .list-item', function (event) {
+                event.stopPropagation();  // Prevent the click from propagating to the document click handler
+
+                if (selectedItem) {
+                    selectedItem.removeClass('selected');  // Deselect the previously selected item
+                }
+
+                selectedItem = $(this);  // Set the current item as the selected item
+                selectedItem.addClass('selected');  // Highlight the selected item
+            });
+
+            // Click outside the list items to remove selection
+            $(document).on('click', function (event) {
+                // Check if the clicked element is not a list item or the move buttons
+                if (!$(event.target).closest('.list-item').length && !$(event.target).closest('.arrow-btn').length) {
+                    if (selectedItem) {
+                        selectedItem.removeClass('selected');  // Remove the selected class
+                        selectedItem = null;  // Reset the selected item
+                    }
+                }
+            });
+
+
+            // Delete button logic
+            $('#remove-topping-btn').click(function () {
+                if (selectedItem) {
+                    const toppingId = selectedItem.data('topping-name');  // Get the topping name from the selected item
+                    console.log("Selected topping to delete: ", toppingId);
+
+                    $.ajax({
+                        url: '/delete_existing_topping/',
+                        type: 'POST',
+                        data: {
+                            'topping_name': toppingId,
+                        },
+                        headers: {
+                            'X-CSRFToken': getCSRFToken(),
+                        },
+                        success: function (response) {
+                            if (response.success) {
+                                selectedItem.remove();  // Remove the selected item from the list
+                                selectedItem = null;  // Reset the selected item
+                                alert(response.toppingName + " has been successfully removed");
+                            } else {
+                                alert("Error Message: " + response.error);
+                            }
+                        },
+                        error: function () {
+                            alert('Error removing Topping from list.');
+                        }
+                    });
+                } else {
+                    alert('No item selected for deletion.');
+                }
+            });
+
+            // Open modal when "Add Item" button is clicked
+            $('#add-topping-btn').click(function () {
+                toggleModal('add-item-modal', 'open');  // Open the modal
+            });
+
+            // Handle modal form submission when "Add Topping" button is clicked
+            $('#add-new-topping-form').submit(function (event) {
+                event.preventDefault();  // Prevent form from submitting the usual way
+
+                // Get the necessary information from the modal (form fields)
+                const toppingName = $('#new-topping-name').val();  // Retrieve value from the topping name input
+                const isAvailable = $('#available-checkbox').prop('checked') ? 'True' : 'False';  // Get checkbox status
+
+                if (toppingName) {
+                    // Create a new item div with the topping name
+                    const newItem = $('<div>', {
+                        class: 'list-item',
+                        text: toppingName || 'Topping'  // Use the provided topping name or default to 'Topping'
+                    }).data('topping-name', toppingName);  // Store topping name in the data attribute
+
+                    $.ajax({
+                        url: '/add_new_topping/',
+                        type: 'POST',
+                        data: {
+                            'topping_name': toppingName,
+                            'available': isAvailable
+                        },
+                        headers: {
+                            'X-CSRFToken': getCSRFToken(),
+                        },
+                        success: function (response) {
+                            if (response.success) {
+                                // Add the new item to the appropriate list based on availability
+                                if (isAvailable === 'True') {
+                                    $('#enabled-list').append(newItem);  // Add to the enabled list
+                                } else {
+                                    $('#disabled-list').append(newItem);  // Add to the disabled list
+                                }
+
+                                toggleModal('add-item-modal', 'close');  // Close the modal after submission
+                                alert(response.toppingName + " has been successfully added");
+                            } else {
+                                alert("Error Message: " + response.error);
+                            }
+                        },
+                        error: function () {
+                            alert('Error removing Topping from list.');
+                        }
+                    });
+                }
+
+                // Reset the form fields after submission
+                $('#new-topping-name').val('');
+                $('#available-checkbox').prop('checked', false);  // Uncheck the checkbox
+            });
+
+
+        });
+    </script>
+{% endblock %}
