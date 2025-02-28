@@ -33,6 +33,11 @@ Ensure you have docker installed locally [Docker Installation Guide](https://doc
 - Simplifies local deployment and dependency management.
 - Ensures a consistent development environment.
 
+### In Code
+- Topping Availability Status – Implemented an availability status for toppings, anticipating support for a future inventory system.
+- User Access Control – Utilized Django's user group system to manage access based on story requirements.
+- Expanded Pizza Creation – Established the groundwork for adding more details to pizza creation, including size, pricing, and other customizations.
+
 
 ## Features
 ### Role-Based Access Control (RBAC)
@@ -46,8 +51,12 @@ Ensure you have docker installed locally [Docker Installation Guide](https://doc
 ### Dynamic Web Application 
 - Uses Django views to handle HTTP requests and modify database records.  
 - AJAX-powered interactions for smoother user experience.  
-- Built-in Django templates with basic responsive design.  
+- Built-in Django templates with basic responsive design.
 
+## Future Ideas
+- Enhanced User Management – Enable owners to view and edit user groups directly through the UI.
+- Inventory & Pricing System – Add pricing and inventory tracking for pizzas and toppings, making them editable.
+- Customer-Focused View – Create a dedicated view for non-employee users that showcases only the Pizza Masterpieces.
 
 ## Credits
 Ryan Mason
