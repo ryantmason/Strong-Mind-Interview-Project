@@ -22,10 +22,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 if os.getenv("DEPLOYENVIRONMENT") == "PROD":
     SECRET_KEY = os.getenv("SECRET_KEY")
-    DEBUG = False
 else:
     SECRET_KEY = 'django-insecure-z)&46+eam94gqt5j6-$u(hmg)we%x4_cxhab0uz_0aau9_5h5k'
-    DEBUG = True
+
+DEBUG = True
 
 ALLOWED_HOSTS = ['localhost', 'sm-pizza-shop.site', 'king-prawn-app-dwe7v.ondigitalocean.app']
 
