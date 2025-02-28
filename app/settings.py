@@ -83,7 +83,6 @@ WSGI_APPLICATION = 'app.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 if os.getenv("DEPLOYENVIRONMENT") in ["PROD", "QA"]:
-    DEBUG = os.getenv("DEBUG_ENABLED") == "TRUE"
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.postgresql",
