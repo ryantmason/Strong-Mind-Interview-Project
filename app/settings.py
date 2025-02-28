@@ -20,10 +20,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-z)&46+eam94gqt5j6-$u(hmg)we%x4_cxhab0uz_0aau9_5h5k'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+if os.getenv("DEPLOYENVIRONMENT") == "PROD":
+    SECRET_KEY = os.getenv("SECRET_KEY")
+    DEBUG = False
+else:
+    SECRET_KEY = 'django-insecure-z)&46+eam94gqt5j6-$u(hmg)we%x4_cxhab0uz_0aau9_5h5k'
+    DEBUG = True
 
 ALLOWED_HOSTS = []
 
@@ -74,16 +76,29 @@ WSGI_APPLICATION = 'app.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'django_db',
-        'USER': 'djangouser',
-        'PASSWORD': 'django_password',
-        'HOST': 'db',  # The service name from docker-compose.yml
-        'PORT': '5432',
+if os.getenv("DEPLOYENVIRONMENT") in ["PROD", "QA"]:
+    DEBUG = os.getenv("DEBUG_ENABLED") == "TRUE"
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": os.getenv("POSTGRES_DB"),
+            "USER": os.getenv("POSTGRES_USER"),
+            "PASSWORD": os.getenv("POSTGRES_PASS"),
+            "HOST": os.getenv("POSTGRES_HOST"),
+            "PORT": os.getenv("POSTGRES_PORT"),
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'django_db',
+            'USER': 'djangouser',
+            'PASSWORD': 'django_password',
+            'HOST': 'db',  # The service name from docker-compose.yml
+            'PORT': '5432',
+        }
+    }
 
 
 # Password validation
