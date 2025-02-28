@@ -9,7 +9,15 @@ from .core.views import (
     sign_up,
     update_topping_status,
     delete_existing_topping,
-    add_new_topping
+    add_new_topping,
+    update_existing_topping,
+    get_available_toppings,
+    get_unavailable_toppings,
+    get_all_pizzas,
+    create_new_pizza,
+    delete_existing_pizza,
+    update_pizza_details,
+    update_pizza_toppings
 )
 
 urlpatterns = [
@@ -21,5 +29,13 @@ urlpatterns = [
     path('available_toppings/', ToppingsPageView.as_view(), name='available_toppings'),
     path('update_topping_status/', update_topping_status, name='update_topping_status'),
     path('delete_existing_topping/', delete_existing_topping, name='delete_existing_topping'),
-    path('add_new_topping/', add_new_topping, name='add_new_topping')
+    path('add_new_topping/', add_new_topping, name='add_new_topping'),
+    path('update_existing_topping/', update_existing_topping, name='update_existing_topping'),
+    path('get_available_toppings/', get_available_toppings, name='get_available_toppings'),
+    path('get_unavailable_toppings/', get_unavailable_toppings, name='get_unavailable_toppings'),
+    path('get_all_pizzas/', get_all_pizzas, name='get_all_pizzas'),
+    path('create_new_pizza/', create_new_pizza, name='create_new_pizza'),
+    path('delete_existing_pizza/', delete_existing_pizza, name='delete_existing_pizza'),
+    path('update_pizza_details/', update_pizza_details, name='update_pizza_details'),
+    path('update_pizza_toppings/', update_pizza_toppings, name='update_pizza_toppings'),
 ]

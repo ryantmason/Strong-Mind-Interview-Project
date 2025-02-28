@@ -16,7 +16,7 @@ class AvailableToppings(models.Model):
 
 class PizzaMasterPieces(models.Model):
     pizza_name = models.CharField(unique=True, max_length=255, default="", null=True)
-    toppings = models.JSONField(default=dict)
+    toppings = models.ManyToManyField(AvailableToppings)
 
     def __str__(self):
         return self.pizza_name

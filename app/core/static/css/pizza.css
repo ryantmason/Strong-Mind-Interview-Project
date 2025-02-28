@@ -1,0 +1,211 @@
+#pizza-menu {
+    text-align: center;
+    padding: 30px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+#pizza-menu h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--primary-dark);
+    margin-bottom: 25px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Grid Layout */
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+    margin: 30px auto;
+    max-width: 1100px;
+}
+
+/* Pizza Cards */
+.pizza-card-container {
+    background-color: var(--primary-light);
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    transition: all 0.3s ease;
+    border: 1px solid var(--primary-dark);
+    position: relative;
+    overflow: hidden;
+}
+
+.pizza-card-container:hover {
+    box-shadow: var(--shadow-hover);
+}
+
+.pizza-name {
+    font-size: 1.6rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: var(--text-light);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+    padding-bottom: 8px;
+}
+
+.topping-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin: 10px 0;
+    color: var(--text-light);
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
+}
+
+.topping-list {
+    list-style-type: disc;
+    padding-left: 25px;
+    margin: 12px 0 18px;
+    text-align: left;
+    font-size: 1.05rem;
+    color: var(--text-light);
+}
+
+.topping-item {
+    margin-bottom: 6px;
+    padding-left: 3px;
+}
+
+
+.remove-pizza-btn {
+    background-color: #f44336;
+    color: white;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.remove-pizza-btn:hover {
+    background-color: #d32f2f;
+}
+
+.edit-pizza-details-btn,
+.edit-pizza-toppings-btn {
+    background-color: var(--secondary-color);
+    color: white;
+    width: 90%;
+    margin: 6px auto;
+    display: block;
+    font-size: 0.9rem;
+    padding: 8px 5px;
+}
+
+.edit-pizza-details-btn:hover,
+.edit-pizza-toppings-btn:hover {
+    background-color: var(--secondary-dark);
+}
+
+#add-pizza-btn {
+    background-color: var(--accent-color);
+    color: white;
+    padding: 12px 25px;
+    font-size: 1.1rem;
+    letter-spacing: 0.5px;
+    margin-top: 25px;
+    border-radius: 8px;
+}
+
+#add-pizza-btn:hover {
+    background-color: var(--accent-dark);
+}
+
+@keyframes modalFadeIn {
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.close-btn {
+    color: #999;
+    float: right;
+    font-size: 1.8rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.2s;
+    margin-top: -10px;
+}
+
+.close-btn:hover {
+    color: #333;
+}
+
+
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-label {
+    display: block;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--text-dark);
+}
+
+.input-field,
+select {
+    width: 100%;
+    padding: 12px;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    font-size: 1rem;
+    transition: border-color 0.2s;
+}
+
+.input-field:focus,
+select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(216, 67, 21, 0.2);
+}
+
+select[multiple] {
+    height: 150px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .grid-container {
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    }
+
+    .pizza-name {
+        font-size: 1.4rem;
+    }
+
+    #add-pizza-btn {
+        padding: 10px 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .grid-container {
+        grid-template-columns: 1fr;
+    }
+
+    .pizza-card-container {
+        max-width: 320px;
+        margin: 0 auto;
+    }
+
+    .modal-content {
+        width: 95%;
+        padding: 15px;
+    }
+}

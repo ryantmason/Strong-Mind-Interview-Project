@@ -8,93 +8,13 @@
     <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
     <script src="{% static 'js/util.js' %}"></script>
     <title>{% block title %}StrongMind - Pizza Home Page{% endblock %}</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f0f0f0;
-            overflow-x: hidden; /* Prevents horizontal scrollbar for the whole page */
-        }
-
-        header {
-            background-color: #333;
-            color: #fff;
-            padding: 10px 20px;
-            text-align: center;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 20px auto;
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .content {
-            margin-top: 20px;
-            line-height: 1.6;
-        }
-
-        footer {
-            text-align: center;
-            padding: 10px;
-            background-color: #333;
-            color: #fff;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-        }
-
-        /* Style for top-right container */
-        .top-right {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-        }
-
-        .dropdown {
-            position: relative;
-            display: inline-block;
-        }
-
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: #f9f9f9;
-            min-width: 160px;
-            z-index: 1;
-            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-            max-width: 100%; /* Ensures dropdown content doesn't exceed parent width */
-            overflow-x: hidden; /* Prevents horizontal overflow */
-        }
-
-        .dropdown:hover .dropdown-content {
-            display: block;
-        }
-
-        .dropdown-content a {
-            color: black;
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-            white-space: nowrap; /* Prevents text from wrapping */
-        }
-
-        .dropdown-content a:hover {
-            background-color: #f1f1f1;
-        }
-
-    </style>
+    {% block css %}
+        <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    {% endblock %}
 </head>
 <body>
 <header>
-    <h1>Welcome to The StrongMind Pizza Shop</h1>
+    <h1>Welcome to The StrongMind Pizza Shop - Employee Access</h1>
 </header>
 
 <!-- Top right dropdown for authenticated user -->
@@ -112,13 +32,19 @@
     {% endif %}
 </div>
 
-<div class="container">
+<div class="base-container">
     <div class="content">
-        <a href="{% url 'home' %}" class="btn btn-primary">Go to Menu</a>
-        <!-- Only the Pizza Store Owner can access this information -->
-        {% if 'Pizza Store Owner' in user.groups.all|stringformat:"s" %}
-            <a href="{% url 'available_toppings' %}" class="btn btn-primary">Available Toppings</a>
-        {% endif %}
+        <div class="nav-container">
+            <a href="{% url 'home' %}" class="btn btn-primary">View Menu</a>
+            <!-- Only the Pizza Store Owner can access this information -->
+            {% if 'Pizza Store Owner' in user.groups.all|stringformat:"s" %}
+                |
+                <a href="{% url 'available_toppings' %}" class="btn btn-primary">View Available Toppings</a>
+            {% endif %}
+        </div>
+        <h2>About Us</h2>
+        <p>All of our Pizzas are only 1 size (fits all) and all come with tasty tomato sauce and
+            great mozzarella.</p>
         {% block content %}
             <!-- Page-specific content goes here -->
         {% endblock %}
@@ -126,7 +52,7 @@
 </div>
 
 <footer>
-    &copy; 2025 Your Company Name
+    &copy; 2025 StrongMind Pizza Shop
 </footer>
 </body>
 </html>
