@@ -35,11 +35,13 @@
 <div class="base-container">
     <div class="content">
         <div class="nav-container">
-            <a href="{% url 'home' %}" class="btn btn-primary">View Menu</a>
-            <!-- Only the Pizza Store Owner can access this information -->
-            {% if 'Pizza Store Owner' in user.groups.all|stringformat:"s" %}
-                |
-                <a href="{% url 'available_toppings' %}" class="btn btn-primary">View Available Toppings</a>
+            {% if user.is_authenticated %}
+                <a href="{% url 'home' %}" class="btn btn-primary">View Menu</a>
+                <!-- Only the Pizza Store Owner can access this information -->
+                {% if 'Pizza Store Owner' in user.groups.all|stringformat:"s" %}
+                    |
+                    <a href="{% url 'available_toppings' %}" class="btn btn-primary">View Available Toppings</a>
+                {% endif %}
             {% endif %}
         </div>
         <h2>About Us</h2>
