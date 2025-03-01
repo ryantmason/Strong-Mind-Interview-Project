@@ -123,13 +123,6 @@
     background-color: var(--accent-dark);
 }
 
-@keyframes modalFadeIn {
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
-
 .close-btn {
     color: #999;
     float: right;
