@@ -34,7 +34,7 @@
                     </select>
 
                     <div class="modal-footer">
-                        <button id="add-pizza-modal-btn" class="close-btn">Add Topping</button>
+                        <button id="add-pizza-modal-btn" class="close-btn">Add Masterpiece</button>
                     </div>
                 </form>
             </div>
@@ -76,7 +76,6 @@
         </div>
         <button id="add-pizza-btn">Add Pizza</button>
     </div>
-
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function () {
@@ -325,7 +324,7 @@
                                 toggleModal('update-pizza-toppings-modal', 'close');
                                 alert('Pizza toppings updated successfully');
                             } else {
-                                alert('Error updating pizza toppings');
+                                alert("Error Message: " + response.error);
                             }
                         },
                         error: function () {
