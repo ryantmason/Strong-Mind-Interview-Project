@@ -21,11 +21,6 @@ class HomePageView(LoginRequiredMixin, TemplateView):
     template_name = "home.html"
     login_url = '/accounts/login/'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['pizza_list'] = PizzaMasterPieces.objects.all()
-        return context
-
 
 # Ensures user is redirected directly to home page instead of Djangos default profile url
 class CustomLoginView(LoginView):
@@ -37,11 +32,6 @@ class CustomLoginView(LoginView):
 class ToppingsPageView(LoginRequiredMixin, TemplateView):
     template_name = "toppings.html"
     login_url = '/accounts/login/'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['available_toppings'] = AvailableToppings.objects.all()
-        return context
 
 
 @csrf_protect
