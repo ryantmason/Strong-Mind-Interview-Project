@@ -10,7 +10,6 @@ def group_required(group_list):
             if not request.user.is_authenticated:
                 return HttpResponseRedirect(reverse('accounts/signup/'))
             user_groups = request.user.groups.values_list('name', flat=True)
-            print("GROUPS", user_groups)
             if not any(group in group_list for group in user_groups):
                 return HttpResponseRedirect(reverse('home'))
             return view_func(request, *args, **kwargs)

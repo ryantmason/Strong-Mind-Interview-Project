@@ -140,6 +140,17 @@ def update_existing_topping(request):
         new_availability = payload.get('new_availability')
 
         try:
+            existing_topping = AvailableToppings.objects.filter(
+                topping_name__iexact=new_topping_name
+            ).first()
+
+            if existing_topping:
+                return JsonResponse({
+                    'success': False,
+                    'error': f'A pizza with the same topping already exists: {existing_topping.topping_name}'
+                })
+
+
             topping = AvailableToppings.objects.get(topping_name=original_topping_name)
             topping.topping_name = new_topping_name
             topping.available = new_availability
@@ -159,8 +170,6 @@ def get_available_toppings(request):
     """
     toppings = AvailableToppings.objects.filter(available=True)  # Fetch all available toppings
     toppings_list = [{'topping_name': topping.topping_name} for topping in toppings]  # Prepare the data
-
-    print("Toppings list ", toppings_list)
 
     return JsonResponse({'success': True, 'toppings': toppings_list})
 

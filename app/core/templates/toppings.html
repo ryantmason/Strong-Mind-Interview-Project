@@ -124,7 +124,7 @@
                     success: function (response) {
                         if (response.success) {
                             $('#enabled-list').empty();
-                            
+
                             response.toppings.forEach(function (topping) {
                                 let toppingItem = $('<div>', {
                                     class: 'list-item',
@@ -148,7 +148,7 @@
                     success: function (response) {
                         if (response.success) {
                             $('#disabled-list').empty();
-                            
+
                             response.toppings.forEach(function (topping) {
                                 let toppingItem = $('<div>', {
                                     class: 'list-item',
@@ -202,7 +202,6 @@
             $('#move-left').click(function () {
                 if (selectedItem && selectedItem.parent().attr('id') === 'disabled-list') {
                     let toppingId = selectedItem.data('topping-name');
-                    console.log("SELECTED ITEM: ", toppingId);
 
                     $.ajax({
                         url: '/update_topping_status/',
@@ -234,7 +233,6 @@
             $('#remove-topping-btn').click(function () {
                 if (selectedItem) {
                     let toppingId = selectedItem.data('topping-name');
-                    console.log("Selected topping to delete: ", toppingId);
 
                     $.ajax({
                         url: '/delete_existing_topping/',
